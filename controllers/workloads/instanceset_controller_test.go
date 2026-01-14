@@ -677,7 +677,7 @@ var _ = Describe("InstanceSet Controller", func() {
 			mockPodReady(itsObj.Name+"-0", itsObj.Name+"-1", itsObj.Name+"-2")
 			By("check its status")
 			Eventually(testapps.CheckObj(&testCtx, itsKey, func(g Gomega, its *workloads.InstanceSet) {
-				g.Expect(its.Status.Ordinals).Should(HaveExactElements(int32(0), int32(1), int32(2)))
+				g.Expect(its.Spec.AssignedOrdinals.Discrete).Should(HaveExactElements(int32(0), int32(1), int32(2)))
 			})).Should(Succeed())
 
 			// offline one instance
@@ -688,7 +688,7 @@ var _ = Describe("InstanceSet Controller", func() {
 			checkPodOrdinal([]int{1}, eventuallyNotExist)
 			By("check its status")
 			Eventually(testapps.CheckObj(&testCtx, itsKey, func(g Gomega, its *workloads.InstanceSet) {
-				g.Expect(its.Status.Ordinals).Should(HaveExactElements(int32(0), int32(2)))
+				g.Expect(its.Spec.AssignedOrdinals.Discrete).Should(HaveExactElements(int32(0), int32(2)))
 			})).Should(Succeed())
 
 			// scale up
@@ -699,7 +699,7 @@ var _ = Describe("InstanceSet Controller", func() {
 			mockPodReady(itsObj.Name+"-3", itsObj.Name+"-4")
 			By("check its status")
 			Eventually(testapps.CheckObj(&testCtx, itsKey, func(g Gomega, its *workloads.InstanceSet) {
-				g.Expect(its.Status.Ordinals).Should(HaveExactElements(int32(0), int32(2), int32(3), int32(4)))
+				g.Expect(its.Spec.AssignedOrdinals.Discrete).Should(HaveExactElements(int32(0), int32(2), int32(3), int32(4)))
 			})).Should(Succeed())
 
 			// delete OfflineInstances will not affect running instances
@@ -710,7 +710,7 @@ var _ = Describe("InstanceSet Controller", func() {
 			checkPodOrdinal([]int{1}, consistentlyNotExist)
 			By("check its status")
 			Consistently(testapps.CheckObj(&testCtx, itsKey, func(g Gomega, its *workloads.InstanceSet) {
-				g.Expect(its.Status.Ordinals).Should(HaveExactElements(int32(0), int32(2), int32(3), int32(4)))
+				g.Expect(its.Spec.AssignedOrdinals.Discrete).Should(HaveExactElements(int32(0), int32(2), int32(3), int32(4)))
 			})).Should(Succeed())
 		})
 	})
